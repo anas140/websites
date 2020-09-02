@@ -17,6 +17,7 @@ class CreateWebsitesTable extends Migration
             $table->id();
             $table->string('name', 32);
             $table->text('text');
+            $table->text('url');
             $table->text('notes')->nullable();
             $table->timestamps();
         });
