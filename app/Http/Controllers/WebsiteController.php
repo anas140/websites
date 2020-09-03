@@ -53,13 +53,29 @@ class WebsiteController extends Controller {
      * Update resource
      */
     public function update(Request $request, Website $website) {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:32',
+            'text' => 'required',
+            'url' => 'required'
+        ]);
+        
+        if($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         $website->update($request->all());
-        return response()->json($website, 200);
+        return response()->json([
+            'status' => true,
+            'data' => $website
+        ], 201);
     }
 
     /** Delete resource */
     public function destroy(Website $website) {
         $website->delete();
-        return response()->json(null, 204);
+        return response()->json(['status' => true], 204);
     }
 }
