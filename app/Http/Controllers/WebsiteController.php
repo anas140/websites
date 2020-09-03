@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Website;
+use Illuminate\Support\Facades\Validator;
 
 class WebsiteController extends Controller {
     
@@ -27,8 +29,24 @@ class WebsiteController extends Controller {
      * @return json response
      */
     public function store(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:32',
+            'text' => 'required',
+            'url' => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         $article = Website::create($request->all());
-        return response()->json($article, 201);
+        return response()->json([
+            'status' => true,
+            'data' => $article
+        ], 201);
     }
 
     /** 
