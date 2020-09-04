@@ -19,6 +19,7 @@ class WebsiteController extends Controller {
     }
 
     public function show(Website $website) {
+        // return Website::findOrFail($id);
         return $website;
     }
 

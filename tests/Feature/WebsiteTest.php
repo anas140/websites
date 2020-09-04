@@ -16,7 +16,7 @@ class WebsiteTest extends TestCase
      */
 
     /** @test */
-    public function get_all_websites() {
+    public function guest_can_get_all_websites() {
         $response = $this->get('api/websites');
         $response->assertStatus(200);
     }
@@ -41,6 +41,23 @@ class WebsiteTest extends TestCase
         $response = $this->json('POST','api/websites');
          //Assert it was successful
         $response->assertStatus(400);
+    }
+
+    /** @test */
+    public function guest_can_get_single_website() {
+        $response = $this->get('api/websites/1');
+        $response->assertStatus(404);
+
+        $data = [
+            'name' => 'site name',
+            'url' => 'https://google.com',
+            'text' => 'text',
+        ];
+        $response = $this->json('POST','api/websites',$data);
+        //Assert it was successful
+        $response->assertStatus(201);
+        $response = $this->get('api/websites/1');
+        $response->assertStatus(200);
     }
 
     /** @test */
@@ -78,5 +95,4 @@ class WebsiteTest extends TestCase
         $response = $this->json('DELETE','api/websites/1');
         $response->assertStatus(204);
     }
-    
 }
